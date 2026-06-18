@@ -1,0 +1,5 @@
+---
+source: src/ui.rs
+expression: "String::from_utf8_lossy(&buffer)"
+---
+[34mHmmm... 🤔[0m

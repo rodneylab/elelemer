@@ -1,0 +1,21 @@
+---
+source: src/openai_api.rs
+expression: request
+---
+{
+  "model": "qxz-supreme-sota:2t",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant"
+    },
+    {
+      "role": "user",
+      "content": "Did the Mayans live at the same time as the Aztecs?"
+    }
+  ],
+  "stream": true,
+  "stream_options": {
+    "include_usage": true
+  }
+}

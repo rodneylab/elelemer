@@ -1,0 +1,3 @@
+Error:   × Connection error while sending request to ollama server
+  help: Check the ollama server is running
+
