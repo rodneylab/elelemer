@@ -376,7 +376,7 @@ where
                         });
                     }
                     log::error!(
-                        "Received unexpected response from {} server: {{response: {response:?}, 
+                        "Received unexpected response from {} server: {{response: {response:?},
                             error_body: {error_body:?}}}",
                         self.parser.name()
                     );
