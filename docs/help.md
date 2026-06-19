@@ -1,0 +1,99 @@
+# Command-Line Help for `elelemer`
+
+This document contains the help content for the `elelemer` command-line program.
+
+**Command Overview:**
+
+* [`elelemer`↴](#elelemer)
+* [`elelemer ollama`↴](#elelemer-ollama)
+* [`elelemer ollama run`↴](#elelemer-ollama-run)
+* [`elelemer llamacpp`↴](#elelemer-llamacpp)
+* [`elelemer llamacpp run`↴](#elelemer-llamacpp-run)
+
+## `elelemer`
+
+CLI utility for running local Large Language Model completions using Llama.cpp and Ollama
+
+**Usage:** `elelemer [OPTIONS] <COMMAND>`
+
+###### **Subcommands:**
+
+* `ollama` — Use the Ollama large language model runner
+* `llamacpp` — Use the llama.cpp large language model runner
+
+###### **Options:**
+
+* `-c`, `--config <CONFIG>` — Path to TOML configuration file
+* `-v`, `--verbose` — Increase logging verbosity
+* `-q`, `--quiet` — Decrease logging verbosity
+
+
+
+## `elelemer ollama`
+
+Use the Ollama large language model runner
+
+**Usage:** `elelemer ollama <COMMAND>`
+
+###### **Subcommands:**
+
+* `run` — Run a model
+
+
+
+## `elelemer ollama run`
+
+Run a model
+
+**Usage:** `elelemer ollama run [OPTIONS] <MODEL> <PROMPT>`
+
+###### **Arguments:**
+
+* `<MODEL>` — Model name or alias
+* `<PROMPT>` — Runner prompt
+
+###### **Options:**
+
+* `-b`, `--base-url <BASE_URL>` — Runner base url ("http://localhost:11434", for example)
+* `-t`, `--timeout <TIMEOUT>` — Runner read timeout in seconds
+* `-s`, `--system-prompt <SYSTEM_PROMPT>` — Model system prompt override
+
+
+
+## `elelemer llamacpp`
+
+Use the llama.cpp large language model runner
+
+**Usage:** `elelemer llamacpp <COMMAND>`
+
+###### **Subcommands:**
+
+* `run` — Run a model
+
+
+
+## `elelemer llamacpp run`
+
+Run a model
+
+**Usage:** `elelemer llamacpp run [OPTIONS] <MODEL> <PROMPT>`
+
+###### **Arguments:**
+
+* `<MODEL>` — Model name or alias
+* `<PROMPT>` — Runner prompt
+
+###### **Options:**
+
+* `-b`, `--base-url <BASE_URL>` — Runner base url ("http://localhost:11434", for example)
+* `-t`, `--timeout <TIMEOUT>` — Runner read timeout in seconds
+* `-s`, `--system-prompt <SYSTEM_PROMPT>` — Model system prompt override
+
+
+
+<hr/>
+
+<small><i>
+    This document was generated automatically by
+    <a href="https://crates.io/crates/clap-markdown"><code>clap-markdown</code></a>.
+</i></small>

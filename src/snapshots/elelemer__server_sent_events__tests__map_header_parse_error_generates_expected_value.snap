@@ -1,0 +1,5 @@
+---
+source: src/server_sent_events.rs
+expression: "format!(\"{outcome:?}\")"
+---
+Unexpected(UnexpectedError { advice: "Unexpected error.  Please rerun in debug mode and provide log details when raising an issue.", context: "parsing runner request headers", cause: "timed out" })

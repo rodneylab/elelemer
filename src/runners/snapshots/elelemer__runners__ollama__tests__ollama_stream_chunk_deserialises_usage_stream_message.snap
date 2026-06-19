@@ -1,0 +1,14 @@
+---
+source: src/runners/ollama.rs
+expression: chunk
+---
+{
+  "choices": [],
+  "model": "qwen3-vl:8b",
+  "system_fingerprint": "fp_ollama",
+  "object": "chat.completion.chunk",
+  "usage": {
+    "prompt_tokens": 29,
+    "completion_tokens": 253
+  }
+}

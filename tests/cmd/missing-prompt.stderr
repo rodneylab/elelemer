@@ -1,0 +1,6 @@
+error: the following required arguments were not provided:
+  <PROMPT>
+
+Usage: elelemer ollama run <MODEL> <PROMPT>
+
+For more information, try '--help'.

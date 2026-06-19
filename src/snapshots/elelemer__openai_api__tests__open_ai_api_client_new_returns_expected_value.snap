@@ -1,0 +1,14 @@
+---
+source: src/openai_api.rs
+expression: outcome
+---
+{
+  "api_key": "[ SECRET ]",
+  "sse_client": {
+    "read_timeout": {
+      "secs": 10,
+      "nanos": 0
+    },
+    "url": "https://example.com/v1/chat/completions"
+  }
+}

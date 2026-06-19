@@ -1,0 +1,5 @@
+---
+source: src/ui.rs
+expression: output
+---
+[39mGood day to you![0m
