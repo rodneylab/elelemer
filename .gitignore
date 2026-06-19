@@ -1,9 +1,9 @@
-/dump
-/target
-/rusty-tags.vi
+!.env.EXAMPLE
 *.profraw
 .DS_Store
+.env
 /.cache
 /.opencode
-.env
-!.env.EXAMPLE
+/dump
+/rusty-tags.vi
+/target
