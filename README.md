@@ -16,7 +16,10 @@
     />
   </a>
 </p>
-<h1 align="center">elelemer</h1>
+
+# elelemer
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/rodneylab/elelemer)
 
 \*Lightweight CLI for running local Large Language Model (LLM) completions with
 **Llama.cpp** and **Ollama**\*
@@ -42,9 +45,9 @@ Key features:
 elelemer offers a unified interface for both Llama.cpp and Ollama, modelled on
 Ollama's CLI command structure.
 
-Llama.cpp's **quantisation** lets you run leading models without a cutting edge GPU;
-it is surprising how far you can get with a regular developer machine with a
-little RAM.
+Llama.cpp's **quantisation** lets you run leading models without a cutting edge
+GPU; it is surprising how far you can get with a regular developer machine with
+a little RAM.
 
 ## 🚀 Quick Start
 
