@@ -71,13 +71,16 @@ mod tests {
 
     use crate::{
         configuration::config_path::{
-            get_config_path_from_dir, get_configuration_path, get_current_dir_configuration_path,
+            get_config_path_from_dir, get_current_dir_configuration_path,
         },
         test_helpers::LOGGING,
     };
 
+    #[cfg(target_family = "unix")]
+    use crate::configuration::config_path::get_configuration_path;
+
     #[test]
-    #[cfg(target_os = "macos")]
+    #[cfg(target_family = "unix")]
     fn get_configuration_path_returns_none_when_local_config_file_does_not_exist() {
         // arrange
         let dir = PathBuf::from("does-not-exist");
