@@ -24,7 +24,9 @@ jobs:
           egress-policy: audit
           disable-telemetry: true
       - name: Install Linux Dependencies
-        run: sudo apt-get update && sudo apt-get install llama-cpp ollama
+        run: sudo apt-get update
+      - name: Install Ollama
+        run: curl -fsSL https://ollama.com/install.sh | sh
       - name: Pull models
         run: ollama pull gemma3:270m
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -84,7 +86,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        msrv: ["1.60.0"] # instrument-coverage flag requires Rust 1.60
+        msrv: ["1.94.0"]
     name: ubuntu / ${{ matrix.msrv }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -109,7 +111,9 @@ jobs:
           egress-policy: audit
           disable-telemetry: true
       - name: Install Linux Dependencies
-        run: sudo apt-get update && sudo apt-get install llama-cpp ollama
+        run: sudo apt-get update
+      - name: Install Ollama
+        run: curl -fsSL https://ollama.com/install.sh | sh
       - name: Pull models
         run: ollama pull gemma3:270m
       - name: Checkout repository
