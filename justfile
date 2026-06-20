@@ -54,6 +54,16 @@ insta-snapshot-clean:
 markdown-docs:
     cargo run --features internal-tools -- markdown-help
 
+# check links are valid
+linkcheck:
+    lychee --cache --max-cache-age 1d \
+        --base-url https://github.com/rodneylab/elelemer/ --root-dir . \
+        --exclude-path "deny.toml" . "**/*.toml" "**/*.rs" "**/*.yml"
+
+# copy URL for Rust book to clipboard
+book:
+    @rustup doc --book --path | pbcopy
+
 # dump trycmd snapshots (for review and manual copy)
 trycmd-snapshot-dump:
     cargo build

@@ -4,11 +4,11 @@ This document contains the help content for the `elelemer` command-line program.
 
 **Command Overview:**
 
-* [`elelemer`↴](#elelemer)
-* [`elelemer ollama`↴](#elelemer-ollama)
-* [`elelemer ollama run`↴](#elelemer-ollama-run)
-* [`elelemer llamacpp`↴](#elelemer-llamacpp)
-* [`elelemer llamacpp run`↴](#elelemer-llamacpp-run)
+- [`elelemer`↴](#elelemer)
+- [`elelemer ollama`↴](#elelemer-ollama)
+- [`elelemer ollama run`↴](#elelemer-ollama-run)
+- [`elelemer llamacpp`↴](#elelemer-llamacpp)
+- [`elelemer llamacpp run`↴](#elelemer-llamacpp-run)
 
 ## `elelemer`
 
@@ -18,16 +18,14 @@ CLI utility for running local Large Language Model completions using Llama.cpp a
 
 ###### **Subcommands:**
 
-* `ollama` — Use the Ollama large language model runner
-* `llamacpp` — Use the llama.cpp large language model runner
+- `ollama` — Use the Ollama large language model runner
+- `llamacpp` — Use the llama.cpp large language model runner
 
 ###### **Options:**
 
-* `-c`, `--config <CONFIG>` — Path to TOML configuration file
-* `-v`, `--verbose` — Increase logging verbosity
-* `-q`, `--quiet` — Decrease logging verbosity
-
-
+- `-c`, `--config <CONFIG>` — Path to TOML configuration file
+- `-v`, `--verbose` — Increase logging verbosity
+- `-q`, `--quiet` — Decrease logging verbosity
 
 ## `elelemer ollama`
 
@@ -37,9 +35,7 @@ Use the Ollama large language model runner
 
 ###### **Subcommands:**
 
-* `run` — Run a model
-
-
+- `run` — Run a model
 
 ## `elelemer ollama run`
 
@@ -49,16 +45,14 @@ Run a model
 
 ###### **Arguments:**
 
-* `<MODEL>` — Model name or alias
-* `<PROMPT>` — Runner prompt
+- `<MODEL>` — Model name or alias
+- `<PROMPT>` — Runner prompt
 
 ###### **Options:**
 
-* `-b`, `--base-url <BASE_URL>` — Runner base url ("http://localhost:11434", for example)
-* `-t`, `--timeout <TIMEOUT>` — Runner read timeout in seconds
-* `-s`, `--system-prompt <SYSTEM_PROMPT>` — Model system prompt override
-
-
+- `-b`, `--base-url <BASE_URL>` — Runner base url ("http://localhost:11434", for example)
+- `-t`, `--timeout <TIMEOUT>` — Runner read timeout in seconds
+- `-s`, `--system-prompt <SYSTEM_PROMPT>` — Model system prompt override
 
 ## `elelemer llamacpp`
 
@@ -68,9 +62,7 @@ Use the llama.cpp large language model runner
 
 ###### **Subcommands:**
 
-* `run` — Run a model
-
-
+- `run` — Run a model
 
 ## `elelemer llamacpp run`
 
@@ -80,20 +72,18 @@ Run a model
 
 ###### **Arguments:**
 
-* `<MODEL>` — Model name or alias
-* `<PROMPT>` — Runner prompt
+- `<MODEL>` — Model name or alias
+- `<PROMPT>` — Runner prompt
 
 ###### **Options:**
 
-* `-b`, `--base-url <BASE_URL>` — Runner base url ("http://localhost:11434", for example)
-* `-t`, `--timeout <TIMEOUT>` — Runner read timeout in seconds
-* `-s`, `--system-prompt <SYSTEM_PROMPT>` — Model system prompt override
-
-
+- `-b`, `--base-url <BASE_URL>` — Runner base url ("http://localhost:11434", for example)
+- `-t`, `--timeout <TIMEOUT>` — Runner read timeout in seconds
+- `-s`, `--system-prompt <SYSTEM_PROMPT>` — Model system prompt override
 
 <hr/>
 
 <small><i>
-    This document was generated automatically by
-    <a href="https://crates.io/crates/clap-markdown"><code>clap-markdown</code></a>.
+This document was generated automatically by
+<a href="https://crates.io/crates/clap-markdown"><code>clap-markdown</code></a>.
 </i></small>

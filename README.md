@@ -72,8 +72,7 @@ _Tip:_ Use `ollama list` to see the aliases currently available.
 If you don't yet have any models, use these lists as a starting point:
 
 - [Ollama Library](https://ollama.com/library?sort=newest)
-- [Unsloth Model
-  Catalogue](https://unsloth.ai/docs/get-started/unsloth-model-catalog)
+- [Unsloth Model Catalogue](https://unsloth.ai/docs/get-started/unsloth-model-catalog)
 
 ## 📦 Installation
 
@@ -127,7 +126,7 @@ macOS & Linux quick install:
 brew install ollama llama.cpp
 
 # Linux (debian/ubuntu)
-sudo apt install ollama llama-cpp
+curl -fsSL https://ollama.com/install.sh | sh
 
 # Linux (fedora/redhat)
 sudo dnf install ollama llama-cpp
@@ -184,8 +183,7 @@ elelemer <runner> run <model> "<prompt>"
 elelemer <runner> [options] run <model> "<prompt>"
 ```
 
-> **Options** (displayed with `elelemer --help`, also in [CLI
-> Documentation](./docs/help.md))
+> **Options** (displayed with `elelemer --help`, also in [CLI Documentation](./docs/help.md))
 
 | Option              | Description                                      |
 | ------------------- | ------------------------------------------------ |

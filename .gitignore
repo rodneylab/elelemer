@@ -1,7 +1,8 @@
+!.env.EXAMPLE
 *.profraw
 .DS_Store
 .env
-!.env.EXAMPLE
+.lycheecache
 /.cache
 /.opencode
 /dump
