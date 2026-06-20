@@ -37,7 +37,8 @@ jobs:
         run: ollama serve & cargo test
   fmt:
     name: Rustfmt
-    permissions: read-all
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
