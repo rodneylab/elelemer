@@ -15,7 +15,8 @@ env:
 jobs:
   test:
     name: Test
-    permissions: read-all
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -27,14 +28,16 @@ jobs:
         run: sudo apt-get update
       - name: Install Ollama
         run: curl -fsSL https://ollama.com/install.sh | sh
-      - name: Pull models
+      - name: Start Ollama server
+        run: ollama serve &
+      - name: Pull Ollama model
         run: ollama pull gemma3:270m
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
       - uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
       - name: Run tests
-        run: ollama serve & cargo test
+        run: cargo test
   fmt:
     name: Rustfmt
     permissions:
@@ -115,7 +118,9 @@ jobs:
         run: sudo apt-get update
       - name: Install Ollama
         run: curl -fsSL https://ollama.com/install.sh | sh
-      - name: Pull models
+      - name: Start Ollama server
+        run: ollama serve &
+      - name: Pull Ollama model
         run: ollama pull gemma3:270m
       - name: Checkout repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -129,15 +134,15 @@ jobs:
       - name: Build
         run: cargo build
       - name: Run tests
-        run: ollama serve & cargo test
+        run: cargo test
       - name: Generate code coverage
         run: grcov . -s . --binary-path ./target/debug/ -t lcov --branch --ignore-not-existing -o ./target/debug/
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           files: ./target/debug/lcov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: rodneylab/elelemer
   dependencies:
     name: Unused dependency check
     permissions: read-all
