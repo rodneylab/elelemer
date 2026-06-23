@@ -1,0 +1,5 @@
+---
+source: src/errors.rs
+expression: "&outcome.to_string()"
+---
+Something went wrong!
