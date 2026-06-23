@@ -107,7 +107,8 @@ jobs:
         run: cargo check
   coverage:
     name: Code coverage
-    permissions: read-all
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner

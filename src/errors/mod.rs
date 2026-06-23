@@ -29,7 +29,7 @@ impl From<config::ConfigError> for ConfigError {
                 if let Some(io_error) = err.downcast_ref::<std::io::Error>() {
                     if let io::ErrorKind::NotFound = io_error.kind() {
                         Self {
-                            advice: "Check file exists".to_owned(),
+                            advice: "Config file not found; check it exists".to_owned(),
                             detail: io_error.to_string(),
                         }
                     } else {
@@ -188,5 +188,62 @@ mod tests {
         // assert
         assert_eq!(&error.to_string(), "Something went wrong.");
         assert_eq!(&format!("{}", help.unwrap()), "Try rebooting your machine.");
+    }
+
+    #[test]
+    fn config_error_from_file_parse_generates_expected_messages() {
+        // arrange
+        let error = config::Config::builder()
+            .add_source(config::File::with_name("src/errors/fixtures/invalid.toml"))
+            .build()
+            .unwrap_err();
+
+        // act
+        let outcome = ConfigError::from(error);
+
+        // assert
+        let help = outcome.help();
+        assert_eq!(
+            &format!("{}", help.expect("Help should be Some")),
+            "Check syntax in `src/errors/fixtures/invalid.toml`"
+        );
+        insta::assert_snapshot!(&outcome.to_string());
+    }
+
+    #[test]
+    fn config_error_from_unexpected_error_generates_expected_messages() {
+        // arrange
+        let error = config::ConfigError::Message(String::from("Something went wrong!"));
+
+        // act
+        let outcome = ConfigError::from(error);
+
+        // assert
+        let help = outcome.help();
+        assert_eq!(
+            &format!("{}", help.expect("Help should be Some")),
+            "Check file exists and syntax is valid"
+        );
+        insta::assert_snapshot!(&outcome.to_string());
+    }
+
+    #[test]
+    fn config_error_from_foreign_error_generates_expected_messages() {
+        // arrange
+        let error = config::Config::builder()
+            .add_source(config::File::with_name("fixtures/invalid.toml"))
+            .build()
+            .unwrap_err();
+
+        // act
+        let outcome = ConfigError::from(error);
+
+        // assert
+        let help = outcome.help();
+        assert_eq!(
+            &format!("{}", help.expect("Help should be Some")),
+            "Config file not found; check it exists"
+        );
+        insta::assert_snapshot!(&outcome.to_string());
     }
 }

@@ -1,0 +1,10 @@
+---
+source: src/errors/mod.rs
+expression: "&outcome.to_string()"
+---
+TOML parse error at line 1, column 23
+  |
+1 | title = "TOML Example""
+  |                       ^
+unexpected key or value, expected newline, `#`
+ in src/errors/fixtures/invalid.toml

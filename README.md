@@ -131,6 +131,12 @@ curl -fsSL https://ollama.com/install.sh | sh
 # Linux (fedora/redhat)
 sudo dnf install ollama llama-cpp
 
+# Linux (arch)
+sudo pacman -S ollama
+
+# Linux (alpine)
+sudo apk add ollama
+
 # Windows – follow the installer on the official GitHub releases or build from source
 ```
 
