@@ -147,7 +147,8 @@ jobs:
           slug: rodneylab/elelemer
   dependencies:
     name: Unused dependency check
-    permissions: read-all
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
