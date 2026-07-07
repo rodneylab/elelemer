@@ -23,14 +23,14 @@ internal-tools = []
 clap = { version = "4.6.1", features = ["derive"] }
 clap-markdown = "0.1.5"
 clap-verbosity-flag = "3.0.4"
-config = "0.15.24"
+config = "0.15.25"
 dirs = "6.0.0"
-env_logger = "0.11.10"
+env_logger = "0.11.11"
 eventsource-client = "0.17.5"
 futures-util = "0.3.32"
 http = "1.4.2"
-indicatif = { version = "0.18.4", features = ["futures"] }
-launchdarkly-sdk-transport = { version = "0.1.3", features = ["hyper-rustls-webpki-roots"] }
+indicatif = { version = "0.18.6", features = ["futures"] }
+launchdarkly-sdk-transport = { version = "0.1.4", features = ["hyper-rustls-webpki-roots"] }
 log = "0.4.33"
 miette = { version = "7.6.0", features = ["fancy"] }
 owo-colors = "4.3.0"
