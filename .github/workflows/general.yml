@@ -27,7 +27,7 @@ jobs:
       - name: Install Linux Dependencies
         run: sudo apt-get update
       - name: Install Ollama
-        run: curl -fsSL https://ollama.com/install.sh | sh
+        run: curl -fsSLO https://github.com/ollama/ollama/releases/download/v0.31.1/install.sh && echo "25f64b810b947145095956533e1bdf56eacea2673c55a7e586be4515fc882c9f install.sh" > SHA256 && sha256sum --check --status SHA256 && sh install.sh
       - name: Start Ollama server
         run: ollama serve &
       - name: Pull Ollama model
