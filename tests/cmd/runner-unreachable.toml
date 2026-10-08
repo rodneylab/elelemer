@@ -1,0 +1,3 @@
+bin.name = "elelemer"
+args = ["ollama", "run", "gpt-oss:20b", "Is 1.9 greater than 1.11 please?", "--base-url", "http://localhost:65432"]
+status.code = 1

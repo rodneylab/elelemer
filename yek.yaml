@@ -1,0 +1,5 @@
+ignore_patterns:
+  - "deny.toml"
+  - "dprint.json"
+  - "rusty-tags.vi"
+  - "tests/integration/**/fixtures.rs"

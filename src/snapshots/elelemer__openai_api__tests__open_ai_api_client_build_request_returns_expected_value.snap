@@ -1,0 +1,21 @@
+---
+source: src/openai_api.rs
+expression: outcome
+---
+{
+  "model": "qxz-supreme-sota",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant"
+    },
+    {
+      "role": "user",
+      "content": "Which countries use Fahrenheit for temperatures?"
+    }
+  ],
+  "stream": true,
+  "stream_options": {
+    "include_usage": true
+  }
+}

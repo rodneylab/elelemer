@@ -1,0 +1,8 @@
+---
+source: src/openai_api.rs
+expression: message
+---
+{
+  "role": "user",
+  "content": "When did the Mayans live?"
+}

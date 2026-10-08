@@ -1,0 +1,14 @@
+---
+source: src/runners/llamacpp.rs
+expression: chunk
+---
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "delta": null
+    }
+  ],
+  "model": "qwen-3.5-35b-a3b",
+  "timings": null
+}

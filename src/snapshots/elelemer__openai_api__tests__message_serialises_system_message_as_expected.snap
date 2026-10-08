@@ -1,0 +1,8 @@
+---
+source: src/openai_api.rs
+expression: message
+---
+{
+  "role": "system",
+  "content": "Why is the sea blue?"
+}
