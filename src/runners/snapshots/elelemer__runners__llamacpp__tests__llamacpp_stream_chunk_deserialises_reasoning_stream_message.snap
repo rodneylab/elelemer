@@ -1,0 +1,16 @@
+---
+source: src/runners/llamacpp.rs
+expression: chunk
+---
+{
+  "choices": [
+    {
+      "finish_reason": null,
+      "delta": {
+        "reasoning_content": "2"
+      }
+    }
+  ],
+  "model": "qwen-3.5-35b-a3b",
+  "timings": null
+}
