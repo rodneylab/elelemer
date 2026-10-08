@@ -19,6 +19,7 @@
 
 # elelemer
 
+[![codecov](https://codecov.io/gh/rodneylab/elelemer/graph/badge.svg?token=BAQUWPEGDL)](https://codecov.io/gh/rodneylab/elelemer)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/rodneylab/elelemer)
 
 \*Lightweight CLI for running local Large Language Model (LLM) completions with

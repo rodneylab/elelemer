@@ -8,9 +8,5 @@
     "supply-chain/audits.toml",
     "supply-chain/config.toml"
   ],
-  "plugins": [
-    "https://plugins.dprint.dev/json-0.21.3.wasm",
-    "https://plugins.dprint.dev/markdown-0.21.1.wasm",
-    "https://plugins.dprint.dev/toml-0.7.0.wasm"
-  ]
+  "plugins": ["npm:@dprint/json@0.25.2", "npm:@dprint/markdown@0.26.0", "npm:@dprint/toml@0.9.0"]
 }

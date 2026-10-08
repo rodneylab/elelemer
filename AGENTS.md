@@ -1,7 +1,7 @@
 # AGENTS.md
 
 Rust CLI for local LLM completions via Llama.cpp and Ollama. Rust 1.93+,
-edition 2024 (current stable edition). Current stable Rust version is 1.96.0.
+edition 2024 (current stable edition). Current stable Rust version is 1.97.0.
 
 ## Commands
 
