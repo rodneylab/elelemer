@@ -49,7 +49,7 @@ async fn main() -> miette::Result<()> {
 
     #[cfg(feature = "internal-tools")]
     if matches!(cli.command, Commands::MarkdownHelp) {
-        docs::write_markdown_docs_to_file::<Cli>("docs/help.md")?;
+        docs::write_markdown_docs_to_file("docs/help.md")?;
 
         return Ok(());
     }
