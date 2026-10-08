@@ -84,7 +84,7 @@ pub struct Cli {
     #[clap(short, long, value_parser)]
     pub config: Option<PathBuf>,
 
-    /// verbosity -v
+    /// Verbosity level (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     #[clap(flatten)]
     pub verbose: Verbosity,
 }

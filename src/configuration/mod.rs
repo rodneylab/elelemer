@@ -65,12 +65,12 @@ pub struct ApiConfig {
 }
 
 impl ApiConfig {
-    /// OpenAI-compatible API API key
+    /// OpenAI-compatible API key
     pub fn api_key(&self) -> &SecretString {
         &self.api_key
     }
 
-    /// OpenAI-compatible API base url key
+    /// OpenAI-compatible API base URL key
     pub fn base_url(&self) -> &Url {
         &self.base_url
     }

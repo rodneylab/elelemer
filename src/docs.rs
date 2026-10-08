@@ -1,12 +1,10 @@
 use std::path::Path;
 
-use clap::Parser;
-
-use crate::errors::IOError;
+use crate::{cli::Cli, errors::IOError};
 
 /// Write the CLI documentation to a file
-pub fn write_markdown_docs_to_file<P: AsRef<Path>, R: Parser>(path: P) -> Result<(), IOError> {
-    let markdown = clap_markdown::help_markdown::<R>();
+pub fn write_markdown_docs_to_file<P: AsRef<Path>>(path: P) -> Result<(), IOError> {
+    let markdown = clap_markdown::help_markdown::<Cli>();
 
     std::fs::write(&path, markdown).map_err(|err| IOError {
         advice: format!(
@@ -26,7 +24,7 @@ mod tests {
 
     use miette::Diagnostic;
 
-    use crate::{cli::Cli, docs::write_markdown_docs_to_file};
+    use crate::docs::write_markdown_docs_to_file;
 
     #[test]
     fn write_markdown_docs_to_file_generates_expected_file() {
@@ -36,7 +34,7 @@ mod tests {
         let path = temp_dir.join("docs.md");
 
         // act
-        let outcome = write_markdown_docs_to_file::<_, Cli>(&path);
+        let outcome = write_markdown_docs_to_file(&path);
 
         // assert
         assert!(outcome.is_ok());
@@ -55,7 +53,7 @@ mod tests {
             .join("docs.md");
 
         // act
-        let outcome = write_markdown_docs_to_file::<_, Cli>(&path).unwrap_err();
+        let outcome = write_markdown_docs_to_file(&path).unwrap_err();
 
         // assert
         assert_eq!(
