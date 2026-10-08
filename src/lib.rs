@@ -8,6 +8,7 @@
 pub mod cli;
 
 /// Generate CLI markdown documentation
+#[cfg(feature = "internal-tools")]
 pub mod docs;
 
 /// App setting defaults and setting generation from configuration file, env variables and cli
