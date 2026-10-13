@@ -36,7 +36,7 @@ miette = { version = "7.6.0", features = ["fancy"] }
 owo-colors = "4.4.0"
 secrecy = { version = "0.10.3", features = ["serde"] }
 serde = { version = "1.0.229", features = ["derive"] }
-serde_json = "1.0.151"
+serde_json = "1.0.154"
 thiserror = "2.0.21"
 tokio = { version = "1.53.2", features = ["macros", "rt-multi-thread"] }
 url = { version = "2.5.8", features = ["serde"] }
@@ -46,7 +46,7 @@ assert_fs = "1.1.4"
 fake = "5.1.0"
 insta = { version = "1.49.0", features = ["glob", "json"] }
 mocktail = "0.3.2"
-proptest = "1.11.0"
+proptest = "1.12.0"
 rexpect = "0.7.1"
 snapbox = { version = "1.2.2", features = ["cmd", "debug"] }
 tempfile = "3.27.0"
@@ -80,3 +80,10 @@ name = "integration"
 panic = "abort"
 codegen-units = 1
 lto = true
+
+# Faster snapshot runs
+# See: https://docs.rs/insta/latest/insta/#optional-faster-runs
+[profile.dev.package.insta]
+opt-level = 3
+[profile.dev.package.similar]
+opt-level = 3
