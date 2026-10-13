@@ -81,7 +81,7 @@ Run a model
 - `-t`, `--timeout <TIMEOUT>` — Runner read timeout in seconds
 - `-s`, `--system-prompt <SYSTEM_PROMPT>` — Model system prompt override
 
-<hr/>
+<hr />
 
 <small><i>
 This document was generated automatically by
