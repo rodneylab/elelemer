@@ -1,0 +1,3 @@
+bin.name = "elelemer"
+args = ["ollama", "run", "Hi"]
+status.code = 2

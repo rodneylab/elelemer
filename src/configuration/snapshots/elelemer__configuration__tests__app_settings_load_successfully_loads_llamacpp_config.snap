@@ -1,0 +1,19 @@
+---
+source: src/configuration/mod.rs
+expression: result
+---
+{
+  "runner": {
+    "Llamacpp": {
+      "base_url": "http://localhost:8080/",
+      "api_key": "[ SECRET ]",
+      "timeout": {
+        "secs": 1800,
+        "nanos": 0
+      }
+    }
+  },
+  "model": "gpt-oss:20b",
+  "prompt": "How many moons does Jupiter have?",
+  "system_prompt": "You are a helpful assistant"
+}
