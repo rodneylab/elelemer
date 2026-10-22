@@ -1,0 +1,3 @@
+bin.name = "elelemer"
+args = ["ollama", "run", "gpt-oss:20b"]
+status.code = 2

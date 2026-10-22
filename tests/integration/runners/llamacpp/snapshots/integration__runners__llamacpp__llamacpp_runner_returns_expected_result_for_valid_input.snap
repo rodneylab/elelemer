@@ -1,0 +1,43 @@
+---
+source: tests/integration/runners/llamacpp/mod.rs
+expression: "std::str::from_utf8(&output).unwrap()"
+---
+[34m
+Reasoning...
+
+[0m[34mThinking[0m[34m Process[0m[34m:[0m[34m
+
+[0m[34m1[0m[34m.[0m[34m [0m[34m **[0m[34mAn[0m[34malyze[0m[34m the[0m[34m Request[0m[34m:**[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m Input[0m[34m:[0m[34m "[0m[34mhi[0m[34m"[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m Context[0m[34m:[0m[34m The[0m[34m user[0m[34m is[0m[34m greeting[0m[34m me[0m[34m.[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m Role[0m[34m:[0m[34m I[0m[34m am[0m[34m a[0m[34m helpful[0m[34m assistant[0m[34m.[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m Goal[0m[34m:[0m[34m Respond[0m[34m politely[0m[34m and[0m[34m offer[0m[34m assistance[0m[34m.[0m[34m
+
+[0m[34m2[0m[34m.[0m[34m [0m[34m **[0m[34mD[0m[34metermine[0m[34m the[0m[34m appropriate[0m[34m response[0m[34m:**[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m Ack[0m[34mnowledge[0m[34m the[0m[34m greeting[0m[34m.[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m State[0m[34m willingness[0m[34m to[0m[34m help[0m[34m.[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m Keep[0m[34m it[0m[34m friendly[0m[34m and[0m[34m concise[0m[34m.[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m Avoid[0m[34m overly[0m[34m complex[0m[34m or[0m[34m irrelevant[0m[34m information[0m[34m.[0m[34m
+
+[0m[34m3[0m[34m.[0m[34m [0m[34m **[0m[34mDraft[0m[34m potential[0m[34m responses[0m[34m:**[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m "[0m[34mHello[0m[34m![0m[34m How[0m[34m can[0m[34m I[0m[34m help[0m[34m you[0m[34m today[0m[34m?"[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m "[0m[34mHi[0m[34m there[0m[34m![0m[34m What[0m[34m's[0m[34m on[0m[34m your[0m[34m mind[0m[34m?"[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m "[0m[34mHey[0m[34m![0m[34m Need[0m[34m some[0m[34m assistance[0m[34m with[0m[34m something[0m[34m?"[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m "[0m[34mHello[0m[34m![0m[34m I[0m[34m'm[0m[34m here[0m[34m to[0m[34m help[0m[34m.[0m[34m Just[0m[34m let[0m[34m me[0m[34m know[0m[34m what[0m[34m you[0m[34m need[0m[34m."[0m[34m
+
+[0m[34m4[0m[34m.[0m[34m [0m[34m **[0m[34mSelect[0m[34m the[0m[34m best[0m[34m response[0m[34m:**[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m "[0m[34mHello[0m[34m![0m[34m How[0m[34m can[0m[34m I[0m[34m help[0m[34m you[0m[34m today[0m[34m?"[0m[34m is[0m[34m standard[0m[34m,[0m[34m polite[0m[34m,[0m[34m and[0m[34m clear[0m[34m.[0m[34m
+
+[0m[34m5[0m[34m.[0m[34m [0m[34m **[0m[34mFinal[0m[34m Polish[0m[34m:**[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m Make[0m[34m it[0m[34m warm[0m[34m.[0m[34m "[0m[34mHello[0m[34m![0m[34m 👋[0m[34m How[0m[34m can[0m[34m I[0m[34m help[0m[34m you[0m[34m today[0m[34m?"[0m[34m ([0m[34mAdding[0m[34m an[0m[34m emoji[0m[34m can[0m[34m make[0m[34m it[0m[34m friend[0m[34mlier[0m[34m,[0m[34m but[0m[34m keep[0m[34m it[0m[34m professional[0m[34m enough[0m[34m).[0m[34m
+[0m[34m   [0m[34m *[0m[34m  [0m[34m Let[0m[34m's[0m[34m go[0m[34m with[0m[34m a[0m[34m simple[0m[34m,[0m[34m friendly[0m[34m greeting[0m[34m.[0m[34m
+
+[0m[34m6[0m[34m.[0m[34m [0m[34m **[0m[34mFinal[0m[34m Output[0m[34m Generation[0m[34m:**[0m[34m ([0m[34mMatches[0m[34m the[0m[34m selected[0m[34m draft[0m[34m)[0m[34m
+[0m[34m   [0m[34m "[0m[34mHello[0m[34m![0m[34m How[0m[34m can[0m[34m I[0m[34m help[0m[34m you[0m[34m today[0m[34m?"[0m[34m or[0m[34m similar[0m[34m.c[0m[34mw[0m[34m
+[0m[34m
+
+...reasoning completed.
+
+
+[0m[39mHello[0m[39m![0m[39m 👋[0m[39m How[0m[39m can[0m[39m I[0m[39m help[0m[39m you[0m[39m today[0m[39m?[0m[39m
+[0m

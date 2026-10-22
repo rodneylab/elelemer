@@ -1,0 +1,5 @@
+---
+source: src/errors/mod.rs
+expression: "&outcome.to_string()"
+---
+configuration file "fixtures/invalid.toml" not found
