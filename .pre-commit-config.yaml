@@ -39,3 +39,12 @@ repos:
     rev: v1.51.1
     hooks:
       - id: typos
+  - repo: local
+    hooks:
+      - id: dprint
+        name: dprint
+        entry: dprint fmt --incremental=false
+        language: node
+        types: [text]
+        additional_dependencies: ["dprint"]
+        pass_filenames: false
