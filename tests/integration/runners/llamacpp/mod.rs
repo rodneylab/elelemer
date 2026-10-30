@@ -2,7 +2,7 @@ mod fixtures;
 
 use elelemer::runners::llamacpp::LlamaCppRunner;
 
-use crate::helpers::{TestRunner, TestRunnerType, test_runner_invoke};
+use crate::helpers::{METADATA_FILTERS, TestRunner, TestRunnerType, test_runner_invoke};
 
 #[tokio::test]
 async fn llamacpp_runner_returns_expected_result_for_valid_input() {
@@ -24,5 +24,9 @@ async fn llamacpp_runner_returns_expected_result_for_valid_input() {
 
     // assert
     assert!(outcome.is_ok());
-    insta::assert_snapshot!(std::str::from_utf8(&output).unwrap());
+    insta::with_settings!({
+        filters => METADATA_FILTERS
+    }, {
+        insta::assert_snapshot!(std::str::from_utf8(&output).unwrap());
+    });
 }

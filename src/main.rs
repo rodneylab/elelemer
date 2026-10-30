@@ -13,12 +13,9 @@ use elelemer::{
 };
 
 #[cfg(feature = "internal-tools")]
-use elelemer::docs;
+use elelemer::{cli::Commands, docs};
 
 async fn run_command<W: Write>(writer: &mut W, settings: AppSettings) -> Result<(), AppError> {
-    #[cfg(feature = "internal-tools")]
-    debug_assert!(!matches!(command, Commands::MarkdownHelp));
-
     match settings.runner {
         RunnerSettings::Llamacpp(runner_settings) => {
             Runner::<LlamaCppRunner>::new(LlamaCppRunner::new(), &runner_settings)?

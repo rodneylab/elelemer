@@ -158,7 +158,7 @@ Default `configuration.toml` values:
 system_prompt = "You are a helpful assistant"
 
 [llamacpp]
-base_url = "http://localhost:8080"
+base_url = "http://localhost:9931"
 api_key = "llama.cpp"
 timeout_secs = 1800
 

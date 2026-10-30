@@ -6,9 +6,14 @@ pub mod ollama;
 
 mod serde_ext;
 
-use std::io::Write;
+use std::{
+    fmt,
+    io::Write,
+    time::{Duration, Instant},
+};
 
 use futures_util::{Stream, StreamExt, TryStreamExt};
+use humantime::format_duration;
 use indicatif::ProgressBar;
 
 use crate::{
@@ -17,7 +22,7 @@ use crate::{
         AppError, ConnectionError, IOError, ResponseError, RunnerStreamError, UnexpectedError,
     },
     openai_api::{FinalStreamChunk, OpenAIAPIClient, StreamChunk, Timings},
-    ui::{OutputWriter, REASONING_TEXT_STYLE, StdoutWriter},
+    ui::{METADATA_TEXT_STYLE, OutputWriter, REASONING_TEXT_STYLE, StdoutWriter},
 };
 
 /// Trait providing specialised chunk choice manipulation implementations for Llamacpp and Ollama runners
@@ -50,6 +55,15 @@ fn extract_final_metadata<
     } else {
         (None, None)
     }
+}
+
+fn extract_final_metadata_usage<K: OpenAiCompatibleStreamChunkObject>(
+    chunk_object: K,
+) -> (Option<String>, Option<Timings>) {
+    let model = Some(chunk_object.model().to_owned());
+    let timings = chunk_object.timings();
+
+    (model, timings)
 }
 
 /// Map 'error' encountered while parsing runner response stream chunk.
@@ -149,7 +163,8 @@ fn update_stream_metadata(chunk: StreamChunk) -> (Option<String>, Option<u32>, O
     }
 }
 
-/// Struct for displaying response stream chunks to user interface for immediate display and also pushing chunks into a buffer, for potential use elsewhere.
+/// Struct for displaying response stream chunks to user interface for immediate display and pushing
+/// chunks into a buffer, for potential use elsewhere.
 struct ResponseStreamDisplayer<'a, W: Write> {
     reasoning: bool,
 
@@ -207,14 +222,67 @@ impl<'a, W: Write> ResponseStreamDisplayer<'a, W> {
     }
 }
 
+fn format_final_metadata(elapsed: &Duration, tokens_predicted: Option<u32>) -> String {
+    let duration_milliseconds = elapsed.as_millis();
+    let duration = if duration_milliseconds > 1_000 {
+        format_duration(Duration::from_secs(elapsed.as_secs()))
+    } else {
+        format_duration(Duration::from_millis(
+            u64::try_from(duration_milliseconds)
+                .expect("u128 value should be under 1000, and fit into a u64"),
+        ))
+    };
+
+    if let Some(tokens_predicted) = tokens_predicted
+        && duration_milliseconds > 0
+    {
+        let tokens_per_second =
+            (1_000.0 * f64::from(tokens_predicted) / elapsed.as_secs_f64()).round() / 1_000.0;
+
+        format!("\n{duration}, {tokens_per_second}t/s\n")
+    } else {
+        format!("\n{duration}\n")
+    }
+}
+
+enum StreamState {
+    Idle,
+    FirstChunkReceived,
+    FinalChunkReceived,
+}
+
+struct StreamFinalMetadata<'a> {
+    duration: &'a Duration,
+    tokens_predicted: Option<u32>,
+}
+
+impl<'a> fmt::Display for StreamFinalMetadata<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            format_final_metadata(self.duration, self.tokens_predicted)
+        )
+    }
+}
+
+impl<'a> StreamFinalMetadata<'a> {
+    fn new(duration: &'a Duration, tokens_predicted: Option<u32>) -> StreamFinalMetadata<'a> {
+        Self {
+            duration,
+            tokens_predicted,
+        }
+    }
+}
+
 struct StreamConsumer<'a, W: Write> {
     displayer: ResponseStreamDisplayer<'a, W>,
-    received_first_chunk: bool,
+    state: StreamState,
     spinner: Option<ProgressBar>,
-    complete: bool,
     model: Option<String>,
     tokens_evaluated: Option<u32>,
     tokens_predicted: Option<u32>,
+    start: Instant,
 }
 
 impl<'a, W: Write> StreamConsumer<'a, W> {
@@ -224,12 +292,12 @@ impl<'a, W: Write> StreamConsumer<'a, W> {
 
         Self {
             displayer,
-            received_first_chunk: false,
+            state: StreamState::Idle,
             spinner,
-            complete: false,
             model: None,
             tokens_evaluated: None,
             tokens_predicted: None,
+            start: Instant::now(),
         }
     }
 
@@ -245,7 +313,7 @@ impl<'a, W: Write> StreamConsumer<'a, W> {
     }
 
     fn handle_received_first_chunk(&mut self) {
-        self.received_first_chunk = true;
+        self.state = StreamState::FirstChunkReceived;
         self.stop_spinner();
     }
 
@@ -253,7 +321,7 @@ impl<'a, W: Write> StreamConsumer<'a, W> {
     where
         W: Write,
     {
-        if !self.received_first_chunk {
+        if let StreamState::Idle = self.state {
             self.handle_received_first_chunk();
         }
 
@@ -262,14 +330,18 @@ impl<'a, W: Write> StreamConsumer<'a, W> {
         if let StreamChunk::Final(_) = chunk {
             (self.model, self.tokens_evaluated, self.tokens_predicted) =
                 update_stream_metadata(chunk);
-            self.complete = true;
+            self.state = StreamState::FinalChunkReceived;
         }
 
         Ok(())
     }
 
     fn finalise(&mut self) -> Result<(), AppError> {
-        self.displayer.writer.write_chunk("\n", None)?;
+        let statistics =
+            StreamFinalMetadata::new(&self.start.elapsed(), self.tokens_predicted).to_string();
+        self.displayer
+            .writer
+            .write_chunk(&statistics, Some(METADATA_TEXT_STYLE))?;
         self.displayer.writer.flush()?;
 
         Ok(())
@@ -290,7 +362,7 @@ async fn process_response_stream<W: Write>(
                 if let Some(chunk) = chunk_option {
                     stream_consumer.consume_chunk(chunk)?;
 
-                    if stream_consumer.complete {
+                    if let StreamState::FinalChunkReceived = stream_consumer.state {
                         break;
                     }
                 }
@@ -304,6 +376,47 @@ async fn process_response_stream<W: Write>(
     stream_consumer.finalise()?;
 
     Ok(stream_consumer.into())
+}
+
+fn map_event_source_error(err: eventsource_client::Error, name: &str) -> RunnerStreamError {
+    match err {
+        eventsource_client::Error::Eof => {
+            log::debug!("Received stream EOF from {name} server (HTTP response stream has ended.)");
+
+            RunnerStreamError::from(err)
+        }
+        eventsource_client::Error::Transport(transport_error) => {
+            log::debug!("{transport_error:?}");
+
+            let advice = format!(
+                "Check the {name} server is running or try increasing read timeout by passing \
+                        `--timeout 600`, for a 600-second timeout, for example.",
+            );
+
+            RunnerStreamError::from(ConnectionError {
+                advice,
+                context: format!("sending request to {name} server"),
+            })
+        }
+        eventsource_client::Error::UnexpectedResponse(ref response, ref error_body) => {
+            if response.status() == 404 {
+                return RunnerStreamError::from(ResponseError {
+                    advice: format!("Check the requested model is available on the {name} server",),
+                    context: format!("sending request to {name} server"),
+                });
+            }
+            log::error!(
+                "Received unexpected response from {name} server: {{response: {response:?},
+                            error_body: {error_body:?}}}",
+            );
+            RunnerStreamError::from(err)
+        }
+        _ => RunnerStreamError::from(UnexpectedError {
+            advice: "contact support".to_owned(),
+            context: format!("sending request to {name} server"),
+            cause: format!("Error streaming {name} response: {err:?}"),
+        }),
+    }
 }
 
 /// LLM Runner core logic.
@@ -336,58 +449,12 @@ where
                     None
                 }
                 eventsource_client::SSE::Comment(comment) => {
-                    log::info!("Received {} stream comment: {comment}", self.parser.name());
+                    log::debug!("Received {} stream comment: {comment}", self.parser.name());
 
                     None
                 }
             })
-            .map_err(|err| match err {
-                eventsource_client::Error::Eof => {
-                    log::debug!(
-                        "Received stream EOF from {} server (HTTP response stream has ended.)",
-                        self.parser.name()
-                    );
-
-                    RunnerStreamError::from(err)
-                }
-                eventsource_client::Error::Transport(transport_error) => {
-                    log::debug!("{transport_error:?}");
-                    log::info!("{transport_error:?}");
-
-                    let advice = format!(
-                        "Check the {} server is running or try increasing read timeout by passing \
-                        `--timeout 600`, for a 600-second timeout, for example.",
-                        self.parser.name()
-                    );
-
-                    RunnerStreamError::from(ConnectionError {
-                        advice,
-                        context: format!("sending request to {} server", self.parser.name()),
-                    })
-                }
-                eventsource_client::Error::UnexpectedResponse(ref response, ref error_body) => {
-                    if response.status() == 404 {
-                        return RunnerStreamError::from(ResponseError {
-                            advice: format!(
-                                "Check the requested model is available on the {} server",
-                                self.parser.name()
-                            ),
-                            context: format!("sending request to {} server", self.parser.name()),
-                        });
-                    }
-                    log::error!(
-                        "Received unexpected response from {} server: {{response: {response:?},
-                            error_body: {error_body:?}}}",
-                        self.parser.name()
-                    );
-                    RunnerStreamError::from(err)
-                }
-                _ => RunnerStreamError::from(UnexpectedError {
-                    advice: "contact support".to_owned(),
-                    context: format!("sending request to {} server", self.parser.name()),
-                    cause: format!("Error streaming {} response: {err:?}", self.parser.name()),
-                }),
-            })
+            .map_err(|err| map_event_source_error(err, self.parser.name()))
     }
 
     async fn get_response_stream(
@@ -461,4 +528,59 @@ pub trait LlmRunnerParser {
 
     /// Human-readable runner name for logging and UI messages
     fn name(&self) -> &'static str;
+}
+
+#[cfg(test)]
+mod tests {
+    use std::time::Duration;
+
+    use crate::runners::format_final_metadata;
+
+    #[test]
+    fn format_final_metadata_returns_expected_output() {
+        // arrange
+        let duration = Duration::new(42, 456_000_000);
+
+        // act
+        let outcome = format_final_metadata(&duration, Some(567));
+
+        // assert
+        assert_eq!(&outcome, "\n42s, 13.355t/s\n");
+    }
+
+    #[test]
+    fn format_final_metadata_returns_expected_output_for_long_elapsed_time() {
+        // arrange
+        let duration = Duration::new(3_600 * 30 + 60 * 3 + 24, 456_000_000);
+
+        // act
+        let outcome = format_final_metadata(&duration, Some(9_876));
+
+        // assert
+        assert_eq!(&outcome, "\n1day 6h 3m 24s, 0.091t/s\n");
+    }
+
+    #[test]
+    fn format_final_metadata_returns_expected_output_for_small_duration() {
+        // arrange
+        let duration = Duration::new(0, 789);
+
+        // act
+        let outcome = format_final_metadata(&duration, Some(567));
+
+        // assert
+        assert_eq!(&outcome, "\n0s\n");
+    }
+
+    #[test]
+    fn format_final_metadata_returns_expected_output_for_missing_token_usage() {
+        // arrange
+        let duration = Duration::new(42, 456_000_000);
+
+        // act
+        let outcome = format_final_metadata(&duration, None);
+
+        // assert
+        assert_eq!(&outcome, "\n42s\n");
+    }
 }
