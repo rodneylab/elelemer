@@ -1,20 +1,10 @@
+mod styles;
+
 use std::path::PathBuf;
 
 use clap::{Parser, builder::Styles};
 use clap_verbosity_flag::Verbosity;
-
-mod styles {
-    use clap::builder::styling::{AnsiColor, Effects, Style};
-
-    pub const HEADER: Style = AnsiColor::Green.on_default().effects(Effects::BOLD);
-    pub const USAGE: Style = AnsiColor::Green.on_default().effects(Effects::BOLD);
-    pub const LITERAL: Style = AnsiColor::Cyan.on_default().effects(Effects::BOLD);
-    pub const PLACEHOLDER: Style = AnsiColor::Cyan.on_default();
-    pub const ERROR: Style = AnsiColor::Red.on_default().effects(Effects::BOLD);
-
-    pub const VALID: Style = AnsiColor::Cyan.on_default().effects(Effects::BOLD);
-    pub const INVALID: Style = AnsiColor::Yellow.on_default().effects(Effects::BOLD);
-}
+use tracing_subscriber::FmtSubscriber;
 
 const CARGO_STYLING: Styles = Styles::styled()
     .header(styles::HEADER)
@@ -92,9 +82,11 @@ pub struct Cli {
 impl Cli {
     /// Configure `env_logger` logging using verbosity flags provided in CLI arguments.
     pub fn initialise_logging(&self) {
-        env_logger::Builder::new()
-            .filter_level(self.verbose.log_level_filter())
-            .init();
+        let subscriber = FmtSubscriber::builder()
+            .with_max_level(self.verbose)
+            .finish();
+        tracing::subscriber::set_global_default(subscriber)
+            .expect("should only be a single global tracing subscriber");
     }
 }
 
@@ -103,6 +95,7 @@ mod tests {
     use std::ffi::OsString;
 
     use clap::Parser;
+    use clap_verbosity_flag::log::Level;
 
     use crate::cli::Cli;
 
@@ -130,7 +123,7 @@ mod tests {
         let cli = parse_args(&args);
 
         // assert
-        assert_eq!(cli.verbose.log_level(), Some(log::Level::Error));
+        assert_eq!(cli.verbose.log_level(), Some(Level::Error));
     }
 
     #[test]
@@ -149,7 +142,7 @@ mod tests {
         let cli = parse_args(&args);
 
         // assert
-        assert_eq!(cli.verbose.log_level(), Some(log::Level::Warn));
+        assert_eq!(cli.verbose.log_level(), Some(Level::Warn));
     }
 
     #[test]
@@ -168,6 +161,6 @@ mod tests {
         let cli = parse_args(&args);
 
         // assert
-        assert_eq!(cli.verbose.log_level(), Some(log::Level::Info));
+        assert_eq!(cli.verbose.log_level(), Some(Level::Info));
     }
 }

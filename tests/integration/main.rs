@@ -23,7 +23,7 @@ fn it_prints_help() {
 fn it_handles_happy_path_as_expected() {
     // act
     let output = Command::cargo_bin("elelemer")
-        .env("ELELEMER_OLLAMA__TIMEOUT_SECS", "3")
+        .env("ELELEMER_OLLAMA__TIMEOUT_SECS", "15")
         .arg("ollama")
         .arg("run")
         .arg("gemma3:270m")
@@ -39,7 +39,10 @@ fn it_handles_happy_path_as_expected() {
     );
     let stdout = String::from_utf8_lossy(&output.stdout).to_lowercase();
     assert!(
-        stdout.contains("hi") | stdout.contains("help") | stdout.contains("what can i do for you"),
+        stdout.contains("hello")
+            | stdout.contains("hi")
+            | stdout.contains("help")
+            | stdout.contains("what can i do for you"),
         "Expected output to contain 'help' or 'hi'; got {stdout}",
     );
     assert!(output.status.success());

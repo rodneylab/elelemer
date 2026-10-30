@@ -66,7 +66,7 @@ where
             if let Some(value) = role
                 && value != "assistant"
             {
-                log::warn!("Unexpected non-assistant role in response");
+                tracing::warn!("Unexpected non-assistant role in response");
 
                 return Ok(None);
             }

@@ -1,7 +1,7 @@
 system_prompt = "You are a helpful assistant"
 
 [llamacpp]
-base_url = "http://127.0.0.1:9931"
+base_url = "http://localhost:9931"
 api_key = "not-required"
 timeout_secs = 1800
 

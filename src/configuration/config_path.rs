@@ -8,11 +8,11 @@ const CONFIGURATION_FILE_NAME: &str = "configuration.toml";
 fn get_configuration_path<P: AsRef<Path>>(dir_path: P) -> Option<PathBuf> {
     let config_path = dir_path.as_ref().join(CONFIGURATION_FILE_NAME);
     if config_path.is_file() {
-        log::info!("Using configuration file {}", config_path.display());
+        tracing::info!("Using configuration file {}", config_path.display());
 
         Some(config_path)
     } else {
-        log::debug!(
+        tracing::debug!(
             "Unable to find configuration file at {}",
             config_path.display()
         );
@@ -23,7 +23,7 @@ fn get_configuration_path<P: AsRef<Path>>(dir_path: P) -> Option<PathBuf> {
 
 fn get_current_dir_configuration_path() -> Option<PathBuf> {
     let Ok(current_dir) = env::current_dir() else {
-        log::warn!("Could not determine current working directory");
+        tracing::warn!("Could not determine current working directory");
 
         return None;
     };
@@ -34,11 +34,11 @@ fn get_current_dir_configuration_path() -> Option<PathBuf> {
 fn get_config_path_from_dir<P: AsRef<Path>>(dir: P) -> Option<PathBuf> {
     let config_path = dir.as_ref().join(CONFIGURATION_FILE_NAME);
     if config_path.is_file() {
-        log::info!("Using configuration file {}", config_path.display());
+        tracing::info!("Using configuration file {}", config_path.display());
 
         Some(config_path)
     } else {
-        log::debug!(
+        tracing::debug!(
             "Unable to find configuration file at {}",
             config_path.display()
         );
@@ -49,7 +49,7 @@ fn get_config_path_from_dir<P: AsRef<Path>>(dir: P) -> Option<PathBuf> {
 
 fn get_config_dir_configuration_path() -> Option<PathBuf> {
     let Some(config_dir) = dirs::config_local_dir() else {
-        log::warn!("Could not determine local configuration directory");
+        tracing::warn!("Could not determine local configuration directory");
 
         return None;
     };
@@ -65,15 +65,13 @@ pub fn find_config_file_path(file_path: Option<PathBuf>) -> Option<PathBuf> {
 
 #[cfg(test)]
 mod tests {
-    use std::{path::PathBuf, sync::LazyLock};
+    use std::path::PathBuf;
 
     use assert_fs::fixture::{FileWriteStr as _, PathChild};
+    use tracing_test::traced_test;
 
-    use crate::{
-        configuration::config_path::{
-            get_config_path_from_dir, get_current_dir_configuration_path,
-        },
-        test_helpers::LOGGING,
+    use crate::configuration::config_path::{
+        get_config_path_from_dir, get_current_dir_configuration_path,
     };
 
     #[cfg(target_family = "unix")]
@@ -117,9 +115,9 @@ mod tests {
     }
 
     #[test]
+    #[traced_test]
     fn get_config_path_from_dir_returns_path() {
         // arrange
-        let log_capture = LazyLock::force(&LOGGING);
         let temp_dir = assert_fs::TempDir::new().unwrap();
         let config_path = temp_dir.join("configuration.toml");
         let _ = temp_dir.child("configuration.toml").write_str("\n\n");
@@ -130,9 +128,8 @@ mod tests {
         // assert
         let outcome_path = outcome.expect("Expected path to be some");
         assert_eq!(outcome_path, config_path);
-        let logs = log_capture.logs();
-        assert!(logs.contains(&format!(
-            "INFO — Using configuration file {}",
+        assert!(logs_contain(&format!(
+            "Using configuration file {}",
             config_path.display()
         )));
     }

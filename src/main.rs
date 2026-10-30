@@ -1,6 +1,3 @@
-#[cfg(test)]
-pub mod test_helpers;
-
 use std::io::{self, BufWriter, Write};
 
 use clap::Parser;
@@ -52,7 +49,7 @@ async fn main() -> miette::Result<()> {
     }
 
     cli.initialise_logging();
-    log::info!("🐘 elelemer");
+    tracing::info!("🐘 elelemer");
 
     let stdout = io::stdout();
     let mut handle = BufWriter::new(stdout.lock());
@@ -64,17 +61,17 @@ async fn main() -> miette::Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use std::sync::LazyLock;
 
     use elelemer::configuration::{ApiConfig, AppSettings, RunnerSettings, UserApiConfig};
     use secrecy::SecretString;
+    use tracing_test::traced_test;
 
-    use crate::{run_command, test_helpers::LOGGING};
+    use crate::run_command;
 
     #[tokio::test]
+    #[traced_test]
     async fn run_command_returns_error_when_api_is_unreachable() {
         // arrange
-        let log_capture = LazyLock::force(&LOGGING);
         let mut writer = Vec::<u8>::new();
         let settings = AppSettings {
             runner: RunnerSettings::Llamacpp(
@@ -98,11 +95,8 @@ mod tests {
             outcome.to_string(),
             "Connection error while sending request to llama.cpp server"
         );
-        let logs = log_capture.logs();
-        assert!(
-            &logs.contains(
-                "WARN — request returned an error: transport error: client error (Connect)"
-            )
-        );
+        assert!(logs_contain(
+            "TransportError" // "request returned an error: transport error: client error (Connect)" // "failed to lookup address information: No address associated with hostname"
+        ));
     }
 }

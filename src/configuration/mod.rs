@@ -274,7 +274,7 @@ impl AppSettings {
             Commands::Llamacpp(RunnerCommands::Run(run_args)) => {
                 let api_config =
                     ApiConfig::try_from(user_settings.llamacpp).inspect_err(|_err| {
-                        log::error!("Error initialising Llamacpp settings");
+                        tracing::error!("Error initialising Llamacpp settings");
                     })?;
 
                 (
@@ -286,7 +286,7 @@ impl AppSettings {
             }
             Commands::Ollama(RunnerCommands::Run(run_args)) => {
                 let api_config = ApiConfig::try_from(user_settings.ollama).inspect_err(|_err| {
-                    log::error!("Error initialising Ollama settings");
+                    tracing::error!("Error initialising Ollama settings");
                 })?;
 
                 (
@@ -313,17 +313,16 @@ impl AppSettings {
 
 #[cfg(test)]
 mod tests {
-    use std::sync::LazyLock;
 
     use assert_fs::prelude::{FileWriteStr, PathChild};
     use clap_verbosity_flag::Verbosity;
     use miette::Diagnostic;
     use secrecy::SecretString;
+    use tracing_test::traced_test;
 
     use crate::{
         cli::{Cli, Commands, RunArgs, RunnerCommands},
         configuration::{ApiConfig, AppSettings, UserApiConfig},
-        test_helpers::LOGGING,
     };
 
     #[test]
@@ -412,9 +411,9 @@ timeout_secs = 2400
     }
 
     #[tokio::test]
+    #[traced_test]
     async fn load_displays_error_detailing_llamacpp_config_is_issue_when_url_is_invalid() {
         // arrange
-        let log_capture = LazyLock::force(&LOGGING);
         let command = Commands::Llamacpp(RunnerCommands::Run(RunArgs {
             model: String::from("qxz-supreme-sota:2t"),
             prompt: String::from("How many colours are there?"),
@@ -436,14 +435,13 @@ timeout_secs = 2400
             outcome.to_string(),
             "Invalid URL: relative URL without a base"
         );
-        let logs = log_capture.logs();
-        assert!(&logs.contains("ERROR — Error initialising Llamacpp settings"));
+        assert!(logs_contain("Error initialising Llamacpp settings"));
     }
 
     #[tokio::test]
+    #[traced_test]
     async fn load_displays_error_detailing_ollama_config_is_issue_when_url_is_invalid() {
         // arrange
-        let log_capture = LazyLock::force(&LOGGING);
         let command = Commands::Ollama(RunnerCommands::Run(RunArgs {
             model: String::from("qxz-supreme-sota:2t"),
             prompt: String::from("How many colours are there?"),
@@ -465,7 +463,6 @@ timeout_secs = 2400
             outcome.to_string(),
             "Invalid URL: relative URL without a base"
         );
-        let logs = log_capture.logs();
-        assert!(&logs.contains("ERROR — Error initialising Ollama settings"));
+        assert!(logs_contain("Error initialising Ollama settings"));
     }
 }

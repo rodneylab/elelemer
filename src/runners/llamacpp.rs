@@ -177,7 +177,7 @@ impl LlmRunnerParser for LlamaCppRunner {
     fn parse_stream_chunk(&self, chunk: &str) -> Option<StreamChunk> {
         let chunk: Option<LlamacppStreamChunk> = match serde_json::from_str(chunk) {
             Ok(value) => {
-                log::debug!("Deserialised {} stream chunk: `{chunk}`", self.name());
+                tracing::debug!("Deserialised {} stream chunk: `{chunk}`", self.name());
 
                 Some(value)
             }

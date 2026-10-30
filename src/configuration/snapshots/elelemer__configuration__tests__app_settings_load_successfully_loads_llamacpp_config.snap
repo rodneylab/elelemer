@@ -5,7 +5,7 @@ expression: result
 {
   "runner": {
     "Llamacpp": {
-      "base_url": "http://127.0.0.1:9931/",
+      "base_url": "http://localhost:9931/",
       "api_key": "[ SECRET ]",
       "timeout": {
         "secs": 1800,
