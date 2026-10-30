@@ -156,10 +156,10 @@ pub struct OllamaRunner;
 
 impl LlmRunnerParser for OllamaRunner {
     fn parse_stream_chunk(&self, chunk: &str) -> Option<StreamChunk> {
-        log::debug!("Ollama stream chunk: {chunk}");
+        tracing::debug!("Ollama stream chunk: {chunk}");
         let chunk: Option<OllamaStreamChunk> = match serde_json::from_str(chunk) {
             Ok(value) => {
-                log::debug!("Deserialised {} stream chunk: `{chunk}`", self.name());
+                tracing::debug!("Deserialised {} stream chunk: `{chunk}`", self.name());
 
                 Some(value)
             }

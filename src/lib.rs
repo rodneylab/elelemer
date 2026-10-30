@@ -27,9 +27,5 @@ pub mod openai_api;
 /// Llamacpp and Ollama runner response parsing logic
 pub mod runners;
 
-/// Test helper logic including test logging
-#[cfg(test)]
-pub mod test_helpers;
-
 /// App user interface logic
 pub mod ui;

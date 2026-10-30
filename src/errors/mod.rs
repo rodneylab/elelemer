@@ -46,7 +46,7 @@ impl From<config::ConfigError> for ConfigError {
                 }
             }
             _ => {
-                log::error!("Unexpected configuration error: {value:?}");
+                tracing::error!("Unexpected configuration error: {value:?}");
                 Self {
                     advice: "Check file exists and syntax is valid".to_owned(),
                     detail: value.to_string(),

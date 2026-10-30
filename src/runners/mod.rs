@@ -87,7 +87,7 @@ pub fn map_stream_chunk_json_parse_error(
             timings: None,
         }))
     } else {
-        log::error!("Unable to deserialise {name} stream chunk `{chunk}`: {err:?}",);
+        tracing::error!("Unable to deserialise {name} stream chunk `{chunk}`: {err:?}",);
 
         None
     }
@@ -381,12 +381,14 @@ async fn process_response_stream<W: Write>(
 fn map_event_source_error(err: eventsource_client::Error, name: &str) -> RunnerStreamError {
     match err {
         eventsource_client::Error::Eof => {
-            log::debug!("Received stream EOF from {name} server (HTTP response stream has ended.)");
+            tracing::debug!(
+                "Received stream EOF from {name} server (HTTP response stream has ended.)"
+            );
 
             RunnerStreamError::from(err)
         }
         eventsource_client::Error::Transport(transport_error) => {
-            log::debug!("{transport_error:?}");
+            tracing::error!("{transport_error:?}");
 
             let advice = format!(
                 "Check the {name} server is running or try increasing read timeout by passing \
@@ -405,7 +407,7 @@ fn map_event_source_error(err: eventsource_client::Error, name: &str) -> RunnerS
                     context: format!("sending request to {name} server"),
                 });
             }
-            log::error!(
+            tracing::error!(
                 "Received unexpected response from {name} server: {{response: {response:?},
                             error_body: {error_body:?}}}",
             );
@@ -440,8 +442,8 @@ where
             .map_ok(|event| match event {
                 eventsource_client::SSE::Event(ref ev) => self.parser.parse_stream_chunk(&ev.data),
                 eventsource_client::SSE::Connected(connection_details) => {
-                    log::info!("Connected to {} server stream", self.parser.name());
-                    log::trace!(
+                    tracing::info!("Connected to {} server stream", self.parser.name());
+                    tracing::trace!(
                         "{} server connection details: {connection_details:?}",
                         self.parser.name()
                     );
@@ -449,7 +451,7 @@ where
                     None
                 }
                 eventsource_client::SSE::Comment(comment) => {
-                    log::debug!("Received {} stream comment: {comment}", self.parser.name());
+                    tracing::debug!("Received {} stream comment: {comment}", self.parser.name());
 
                     None
                 }
@@ -476,11 +478,11 @@ where
         system_prompt: &str,
         prompt: &str,
     ) -> Result<(), AppError> {
-        log::info!(
+        tracing::info!(
             "Sending prompt to {} server and awaiting response...",
             self.parser.name()
         );
-        log::debug!("Prompt: {prompt}");
+        tracing::debug!("Prompt: {prompt}");
 
         let client = self.get_openai_api_client();
         let events_client = client.create_server_events_client(model, system_prompt, prompt)?;
@@ -488,7 +490,7 @@ where
         futures_util::pin_mut!(stream);
 
         let response = process_response_stream(writer, stream).await?;
-        log::debug!("{response:?}");
+        tracing::debug!("{response:?}");
 
         Ok(())
     }
@@ -501,7 +503,7 @@ where
         model: &str,
         prompt: &str,
     ) -> Result<(), AppError> {
-        log::info!("Using {} runner", self.parser.name());
+        tracing::info!("Using {} runner", self.parser.name());
         self.run(writer, model, system_prompt, prompt).await?;
 
         Ok(())
