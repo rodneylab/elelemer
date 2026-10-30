@@ -4,7 +4,7 @@ use crate::{
         LlmRunnerParser, OpenAiCompatibleStreamChunkChoice,
         OpenAiCompatibleStreamChunkChoiceDeltaContent,
         OpenAiCompatibleStreamChunkChoiceDeltaReasoningContent, OpenAiCompatibleStreamChunkObject,
-        extract_final_metadata, map_stream_chunk_json_parse_error,
+        extract_final_metadata, extract_final_metadata_usage, map_stream_chunk_json_parse_error,
         parse_open_ai_compatible_stream_chunk_string,
         serde_ext::deserialise_ollama_open_api_helper,
     },
@@ -137,7 +137,13 @@ impl From<OllamaStreamChunk> for StreamChunk {
                         }
                     }
                 } else {
-                    Self::Empty
+                    if let Some(ref _usage) = chunk_object.usage {
+                        let (model, timings) = extract_final_metadata_usage(&chunk_object);
+
+                        Self::Final(FinalStreamChunk { model, timings })
+                    } else {
+                        Self::Empty
+                    }
                 }
             }
         }

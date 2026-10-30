@@ -3,7 +3,7 @@ use crate::{
     runners::{
         LlmRunnerParser, OpenAiCompatibleStreamChunkChoice,
         OpenAiCompatibleStreamChunkChoiceDeltaContent, OpenAiCompatibleStreamChunkObject,
-        extract_final_metadata, map_stream_chunk_json_parse_error,
+        extract_final_metadata, extract_final_metadata_usage, map_stream_chunk_json_parse_error,
         parse_open_ai_compatible_stream_chunk_string, serde_ext::deserialise_with_empty_delta,
     },
 };
@@ -125,13 +125,17 @@ impl From<LlamacppStreamChunk> for StreamChunk {
             LlamacppStreamChunk::String(chunk) => {
                 parse_open_ai_compatible_stream_chunk_string(chunk)
             }
-            LlamacppStreamChunk::Object(chunk_object) => {
+            LlamacppStreamChunk::Object(ref chunk_object) => {
                 if let Some(choice) = chunk_object.choices.first() {
                     match &choice.delta {
                         None | Some(LlamacppStreamChunkChoiceDelta::Empty {}) => {
-                            let (model, timings) = extract_final_metadata(choice, &chunk_object);
+                            let (model, timings) = extract_final_metadata(choice, chunk_object);
 
-                            Self::Final(FinalStreamChunk { model, timings })
+                            if model.is_some() && timings.is_some() {
+                                Self::Final(FinalStreamChunk { model, timings })
+                            } else {
+                                Self::Empty
+                            }
                         }
                         Some(LlamacppStreamChunkChoiceDelta::RoleContent(
                             LlamacppStreamChunkChoiceDeltaRoleContent { role, content },
@@ -152,7 +156,13 @@ impl From<LlamacppStreamChunk> for StreamChunk {
                         }
                     }
                 } else {
-                    Self::Empty
+                    if let Some(ref _usage) = chunk_object.timings {
+                        let (model, timings) = extract_final_metadata_usage(chunk_object);
+
+                        Self::Final(FinalStreamChunk { model, timings })
+                    } else {
+                        Self::Empty
+                    }
                 }
             }
         }

@@ -51,7 +51,7 @@ elelemer llamacpp run <model> <prompt>
 
 ## Configuration
 
-- Default config: `configuration.toml` (localhost:8080 for llama.cpp,
+- Default config: `configuration.toml` (localhost:9931 for llama.cpp,
   localhost:11434 for Ollama)
 - Custom config: `elelemer --config <path>`
 

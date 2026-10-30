@@ -12,6 +12,11 @@ use mocktail::{
 };
 use secrecy::SecretBox;
 
+pub static METADATA_FILTERS: [(&str, &str); 2] = [
+    (r"[[[:digit:]]\.]+m?s", "[  TIMING  ]"),
+    (r"[[[:digit:]]\.]+t\/s", "[  TOKENS_PER_SECOND_METRIC  ]"),
+];
+
 pub struct TestRunner {}
 
 pub enum TestRunnerType {

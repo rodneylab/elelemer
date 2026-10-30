@@ -29,6 +29,7 @@ env_logger = "0.11.11"
 eventsource-client = "0.18.1"
 futures-util = "0.3.34"
 http = "1.5.0"
+humantime = "2.4.0"
 indicatif = { version = "0.18.6", features = ["futures"] }
 launchdarkly-sdk-transport = { version = "0.1.4", features = ["hyper-rustls-webpki-roots"] }
 log = "0.4.34"
@@ -44,7 +45,7 @@ url = { version = "2.5.8", features = ["serde"] }
 [dev-dependencies]
 assert_fs = "1.1.4"
 fake = "5.1.0"
-insta = { version = "1.49.0", features = ["glob", "json"] }
+insta = { version = "1.49.0", features = ["filters", "glob", "json", "redactions"] }
 mocktail = "0.3.2"
 proptest = "1.12.0"
 rexpect = "0.7.1"

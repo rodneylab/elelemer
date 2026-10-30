@@ -23,7 +23,7 @@ const DEFAULT_SYSTEM_PROMPT: &str = "You are a helpful assistant";
 const DEFAULT_READ_TIMEOUT: u64 = 3600;
 const DEFAULT_OLLAMA_BASE_URL: &str = "http://localhost:11434";
 const DEFAULT_OLLAMA_API_KEY: &str = "ollama";
-const DEFAULT_LLAMACPP_BASE_URL: &str = "http://localhost:8080";
+const DEFAULT_LLAMACPP_BASE_URL: &str = "http://localhost:9931";
 const DEFAULT_LLAMACPP_API_KEY: &str = "llama.cpp";
 
 /// Runner API configuration
@@ -248,6 +248,9 @@ impl AppSettings {
     /// Overrides are applied in that order, with previous listed items being overridden by
     /// later ones.
     pub fn load(cli_options: Cli) -> Result<Self, AppError> {
+        #[cfg(feature = "internal-tools")]
+        debug_assert!(!matches!(cli_options.command, Commands::MarkdownHelp));
+
         let mut config_builder = Self::build_default_config()?;
 
         if let Some(config_path) = find_config_file_path(cli_options.config.clone()) {
@@ -292,6 +295,10 @@ impl AppSettings {
                     run_args.prompt,
                     user_settings.system_prompt,
                 )
+            }
+            #[cfg(feature = "internal-tools")]
+            Commands::MarkdownHelp => {
+                unimplemented!("load configuration should not be called in `internal-tools` mode")
             }
         };
 
@@ -372,10 +379,6 @@ timeout_secs = 2400
                 timeout: None,
             })),
             config: Some(config_path),
-
-            #[cfg(feature = "internal-tools")]
-            markdown_help: false,
-
             verbose: Verbosity::new(0, 0),
         };
 
@@ -398,10 +401,6 @@ timeout_secs = 2400
                 timeout: None,
             })),
             config: None,
-
-            #[cfg(feature = "internal-tools")]
-            markdown_help: false,
-
             verbose: Verbosity::new(0, 0),
         };
 

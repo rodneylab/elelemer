@@ -8,6 +8,9 @@ use crate::errors::IOError;
 /// Text style for LLM reasoning-mode response output
 pub const REASONING_TEXT_STYLE: Style = Style::new().blue();
 
+/// Text style for LLM reasoning-mode response output
+pub const METADATA_TEXT_STYLE: Style = Style::new().yellow();
+
 /// Default stdout text style
 pub const DEFAULT_TEXT_STYLE: Style = Style::new().default_color();
 
