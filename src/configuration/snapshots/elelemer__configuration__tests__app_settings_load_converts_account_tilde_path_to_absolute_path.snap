@@ -1,0 +1,19 @@
+---
+source: src/configuration/mod.rs
+expression: result
+---
+{
+  "runner": {
+    "Ollama": {
+      "base_url": "http://localhost:11434/",
+      "api_key": "[ SECRET ]",
+      "timeout": {
+        "secs": 2400,
+        "nanos": 0
+      }
+    }
+  },
+  "model": "gpt-oss:20b",
+  "prompt": "How far is the moon from planet Earth?",
+  "system_prompt": "You are a helpful assistant"
+}

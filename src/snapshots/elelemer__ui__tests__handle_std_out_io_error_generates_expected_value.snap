@@ -1,0 +1,5 @@
+---
+source: src/ui.rs
+expression: "format!(\"{outcome:?}\")"
+---
+IOError { advice: "Contact support", context: "Displaying runner response to stdout", cause: Custom { kind: BrokenPipe, error: "Something went wrong!" } }

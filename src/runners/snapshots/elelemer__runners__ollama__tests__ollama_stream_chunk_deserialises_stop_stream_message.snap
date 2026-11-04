@@ -1,0 +1,18 @@
+---
+source: src/runners/ollama.rs
+expression: chunk
+---
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "delta": {
+        "content": ""
+      }
+    }
+  ],
+  "model": "phi4-mini:3.8b",
+  "system_fingerprint": "fp_ollama",
+  "object": "chat.completion.chunk",
+  "usage": null
+}

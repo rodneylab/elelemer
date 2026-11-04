@@ -1,1 +1,10 @@
+!.env.EXAMPLE
+*.profraw
 .DS_Store
+.env
+.lycheecache
+/.cache
+/.opencode
+/dump
+/rusty-tags.vi
+/target
