@@ -12,7 +12,7 @@ use url::Url;
 
 use crate::{
     cli::{Cli, Commands, RunArgs, RunnerCommands},
-    configuration::config_path::find_config_file_path,
+    configuration::config_path::find_configuration_path,
     errors::{AppError, ConfigError},
 };
 
@@ -35,7 +35,7 @@ const DEFAULT_LLAMACPP_API_KEY: &str = "llama.cpp";
 #[derive(Debug, serde::Deserialize)]
 #[cfg_attr(test, derive(serde::Serialize))]
 pub struct UserApiConfig {
-    /// Runner API base url
+    /// Runner API base URL
     pub base_url: String,
 
     /// Runer API key
@@ -253,9 +253,14 @@ impl AppSettings {
 
         let mut config_builder = Self::build_default_config()?;
 
-        if let Some(config_path) = find_config_file_path(cli_options.config.clone()) {
+        if let Ok(config_path) = find_configuration_path(cli_options.config.clone())
+            && let Some(config_path) = config_path
+        {
+            tracing::info!("Using configuration file {}", config_path.display());
+
             config_builder = config_builder.add_source(config::File::from(config_path));
         }
+
         config_builder = config_builder.add_source(
             config::Environment::default()
                 .prefix("ELELEMER")
